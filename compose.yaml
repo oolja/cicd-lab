@@ -1,0 +1,10 @@
+services:
+  app:
+    build: .
+    image: cicd-lab:latest
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      APP_VERSION: ${APP_VERSION:-docker}
+    restart: unless-stopped
