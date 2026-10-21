@@ -65,6 +65,29 @@ docker build -t cicd-lab .
 docker run --rm -p 3000:3000 -e APP_VERSION=1.0.0 cicd-lab
 ```
 
+### Run scripts with Docker
+
+You don't need Node.js on your machine to run the tests or other scripts. The `test` service in `compose.yaml` builds the `test` stage of the `Dockerfile`, which has all dependencies, the source and the tests. The production image is unchanged and has none of these.
+
+Run the tests:
+
+```bash
+docker compose run --rm --build test
+```
+
+Add a script name at the end to run that script instead:
+
+```bash
+docker compose run --rm --build test npm run verify
+docker compose run --rm --build test npm run typecheck
+docker compose run --rm --build test npm run build
+```
+
+- `--build` rebuilds the image so it includes your latest changes. The source is copied into the image, not shared with it live.
+- `--rm` deletes the container when the command finishes, so output such as `dist` from `npm run build` is discarded.
+- The `test` service uses a Compose profile, so `docker compose up` does not start it.
+- To run the app, use `docker compose up -d --build` rather than `npm run dev` or `npm start`.
+
 ## Start your own repository
 
 From inside your newly cloned `cicd-lab` folder, remove the starter's Git history and remote connection, then initialize your own repository. This preserves the app files.
