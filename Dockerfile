@@ -11,6 +11,11 @@ COPY tsconfig.json ./
 COPY src ./src
 RUN npm run build
 
+# ---- Test stage: build stage plus tests (not part of the runtime image) ----
+FROM build AS test
+COPY test ./test
+CMD ["npm", "run", "test"]
+
 # ---- Runtime stage: production deps + compiled output only ----
 FROM node:24-alpine AS runtime
 WORKDIR /app
